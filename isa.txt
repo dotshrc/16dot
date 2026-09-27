@@ -1,0 +1,137 @@
+englishname
+hexopcode instruction(arguments):
+    process
+
+- 3-arg class (primary opcodes 0x1 - 0x4)
+ADD
+0x1 add(reg arg1, reg arg2, reg dest):
+    dest = arg1 + arg2
+
+SUBstract
+0x2 sub(reg arg1, reg arg2, reg dest):
+    dest = arg1 - arg2
+
+AND
+0x3 and(reg arg1, reg arg2, reg dest):
+    dest = arg1 & arg2
+
+Set on Less Than
+0x4 slt(reg arg1, reg arg2, reg dest):
+    dest = (arg1 < arg2) ? 1 : 0
+
+
+- 2-arg class (primary opcode 0x5, sub-opcodes 0x1 - 0x6)
+OR
+0x1 or(reg arg, reg dest):
+    dest = dest | arg
+
+eXclusive OR
+0x2 xor(reg arg, reg dest):
+    dest = dest ^ arg
+
+NOT
+0x3 not(reg arg, reg dest):
+    dest = ~arg
+
+CoMPare
+0x4 cmp(reg arg1, reg arg2):
+    flags updated by (arg1 - arg2)
+
+SHift Left
+0x5 shl(reg arg, reg dest):
+    dest = dest << arg
+
+SHift Right
+0x6 shr(reg arg, reg dest):
+    dest = dest >> arg
+
+
+- branch class (primary opcode 0x6, condition sub-opcodes 0x1 - 0x7)
+JumP
+0x1 jp(imm8 offset):
+    pc = pc + offset
+
+Jump if Zero
+0x2 jz(imm8 offset):
+    if (Z == 1) pc = pc + offset
+
+Jump if Not Zero
+0x3 jnz(imm8 offset):
+    if (Z == 0) pc = pc + offset
+
+Jump if Negative
+0x4 jn(imm8 offset):
+    if (N == 1) pc = pc + offset
+
+Jump if Not Negative
+0x5 jnn(imm8 offset):
+    if (N == 0) pc = pc + offset
+
+Jump if Carry
+0x6 jc(imm8 offset):
+    if (C == 1) pc = pc + offset
+
+Jump if Not Carry
+0x7 jnc(imm8 offset):
+    if (C == 0) pc = pc + offset
+
+
+- 1-arg class (primary opcode 0x7, sub-opcodes 0x8 - 0xB)
+Absolute Jump
+0x8 aj(reg arg):
+    pc = arg
+
+CaLL
+0x9 cll(reg arg):
+    lr = pc; pc = arg
+
+PuSH
+0xA psh(reg arg):
+    mem[--sp] = arg
+
+POP
+0xB pop(reg dest):
+    dest = mem[sp++]
+
+
+- immediate class (primary opcodes 0x8 - 0x9)
+LoaD Lower
+0x8 ldl(reg dest, imm8):
+    dest = imm8
+
+LoaD Upper
+0x9 ldu(reg dest, imm8):
+    dest = (dest & 0x00FF) | (imm8 << 8)
+
+
+- mem class (primary opcodes 0xA - 0xB)
+LoaD
+0xA ld(reg dest, reg addr):
+    dest = mem[addr]
+
+STore
+0xB st(reg src, reg addr):
+    mem[addr] = src
+
+...
+
+- control class (primary opcode 0xF, sub-opcodes 0x0-0x2
+HaLT
+0x0 hlt():
+	s->running = 0
+
+TRaP
+0x1 trp():
+    s->saved_pc = s->pc;
+    s->privilege = KERNEL_MODE;
+    s->pc = TRAP_VECTOR_ADDR;
+
+eXception ReTurn
+0x2 xrt():
+    s->privilege = USER_MODE;
+    s->pc = s->saved_pc;
+
+- special
+0x0 nop():
+	// literally nothing
+
