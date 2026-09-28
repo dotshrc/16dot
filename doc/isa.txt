@@ -117,7 +117,7 @@ STore
 
 ...
 
-- control class (primary opcode 0xF, sub-opcodes 0x0-0x2
+- control class (primary opcode 0xF, sub-opcodes 0x0-0x2):
 HaLT
 0x0 hlt():
 	s->running = 0
