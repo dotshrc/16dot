@@ -24,5 +24,5 @@ $(DOTBIN): $(DOTHEX)
 
 .PHONY: clean
 clean:
-	rm -vf $(BIN) $(OBJ)
+	rm -vf $(BIN) $(OBJ) $(DOTBIN)
 
