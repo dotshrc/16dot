@@ -7,36 +7,36 @@ no operation:
 [u4 opcode][payload]
 0x1 add: [u4 dest][u4 ar1][u4 ar2] - addition
 0x2 sub: [u4 dest][u4 ar1][u4 ar2] - substraction
-0x3 and: [u4 dest][u4 ar1][u4 ar2] - bitwise and
-0x4 mul: [u4 dest][u4 ar1][u4 ar2] - multiplication
-0x5 div: [u4 dest][u4 ar1][u4 ar2] - division
-0x6 slt: [u4 dest][u4 ar1][u4 ar2] - set if less than
+0x3 mul: [u4 dest][u4 ar1][u4 ar2] - multiplication
+0x4 div: [u4 dest][u4 ar1][u4 ar2] - division
+0x5 slt: [u4 dest][u4 ar1][u4 ar2] - set if less than
 
 2 operand instructions:
-[u4 0x7][payload][u4 subop]
-0x1 or:  [u4 dest][u4 arg1] - bitwise or
-0x2 xor: [u4 dest][u4 arg1] - bitwise execlusive or
-0x3 not: [u4 dest][u4 arg1] - bitwise not
-0x6 loa: [u4 dest][u4 addr] 
+[u4 0x6][payload][u4 subop]
+0x1 or:  [u4 dest][u4 argu] - bitwise or
+0x2 xor: [u4 dest][u4 argu] - bitwise execlusive or
+0x3 not: [u4 dest] [u4 src] - bitwise not
+0x4 and: [u4 dest][u4 argu] - bitwise and
+0x5 loa: [u4 dest][u4 addr] 
 - load from mem addr in reg "addr" u16 into reg "dest"
-0x7 sto: [u4 src] [u4 addr]
+0x6 sto: [u4 src] [u4 addr]
 - store from reg "src" u16 into mem addr in reg "addr"
 (note for jpz, jnz, [u4 cond] is a register containing an i16 offset)
-0x8 jpz: [u4 offs][u4 cond] 
+0x7 jpz: [u4 offs][u4 cond] 
 - jump for u16 in reg "offs" if reg "cond" == 0
-0x9 jnz: [u4 offs][u4 cond]
+0x8 jnz: [u4 offs][u4 cond]
 - jump for u16 in reg "offs" if reg "cond" != 0
-0xA lsr: [u4 dest][u4 offs]
+0x9 lsr: [u4 dest][u4 offs]
 - logical shift right reg "dest" in-place by immediate offs
-0xB lsl: [u4 dest][u4 offs]
+0xA lsl: [u4 dest][u4 offs]
 - logical shift left reg "dest" in-place by immediate offs
-0xC asr: [u4 dest][u4 offs]
+0xB asr: [u4 dest][u4 offs]
 - arithmetic shift right reg "dest" in-place by immediate offs
-0xD asl: [u4 dest][u4 offs]
+0xC asl: [u4 dest][u4 offs]
 - arithmetic shift left reg "dest" in-place by immediate offs
 
 1 operand instructions:
-[u4 0x8][payload][u4 unused][u4 subop]
+[u4 0x7][payload][u4 unused][u4 subop]
 0x1 jto: [u4 reg] - jump to memory address in reg "reg"
 0x2 psh: [u4 reg] - push u16 from reg "reg" into stack
 0x3 pop: [u4 reg] - pop u16 to reg "reg" from stack
@@ -44,50 +44,50 @@ no operation:
 
 immediate instructions: 
 [u4 opcode][payload]
-0x9 ldl: [u4 dest][u8 imm8] - load 
-0xA ldu: [u4 dest][u8 imm8]
-0xB sli: [u4 dest][u8 imm8]
+0x8 ldl: [u4 dest][u8 imm8] - load 
+0x9 ldu: [u4 dest][u8 imm8]
 
 control instructions:
-[u4 0xC][u8 unused][u4 subop]
+[u4 0xA][u8 unused][u4 subop]
 0x0 hlt - flip running bit off
 0x1 sys - flip priveldge bit, save pc to xpc and jump to kernel syscall vector
 0x2 xrt - exclusive return to pc saved in xpc and flip priveldge bit
-0x3 trp -
+0x3 trp - flip priveldge bit, save pc to xpc and jump to kernel trap vector
 0x4 nnt - flip interrupt bit off, disallowing interrupts
 0x5 int - flip interrupt bit on, allowing interrupts
-0x6 dbd - dump all registers
-0x7 pgf - throw pagefault interrupt
-0x8 brk - throw breakpoint interrupt
+0x6 drg - dump all registers
+0x7 brk - throw breakpoint interrupt
 
 
 other instruction: (mother fucking assholes needed to separate em from everything else)
-0xD jmp: [u4 opcode][i12 simm12]
+0xB jmp: [u4 opcode][i12 simm12]
 
 unused:
+0xC
+0xD
 0xE
 0xF
 
 -- registers:
 system registers:
-0x0: zero
-0x1: sys
-0x2: gb
-0x3: sp
-0x4: pc
-0x5: xpc
+0x0: zero - always reads 0, writes are ignored
+0x1: sys - syscall register
+0x2: gp - global pointer
+0x3: sp - stack pointer
+0x4: pc - program count
+0x5: xpc - exclusive program count
 
 other registers:
-0x6: lr
-0x7: a0
-0x8: a1
-0x9: a2
-0xA: t0
-0xB: t1
-0xC: t2
-0xD: s0
-0XE: s1
-0XF: s2
+0x6: lr - link register
+0x7: a0 - argument 0
+0x8: a1 - ..
+0x9: a2 - ..
+0xA: t0 - temp 0
+0xB: t1 - ..
+0xC: t2 - ..
+0xD: s0 - saved 0
+0XE: s1 - ..
+0XF: s2 - ..
 
 -- vectors:
 // TODO
