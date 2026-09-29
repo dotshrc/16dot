@@ -1,153 +1,93 @@
---instructions:
+-- instructions:
 
-englishname
-hexopcode instruction(arguments):
-    process
+no operation:
+0x0 nop: [u4 opcode][u12 unused]
 
-- 3-arg class (primary opcodes 0x1 - 0x4)
-ADD
-0x1 add(reg arg1, reg arg2, reg dest):
-    dest = arg1 + arg2
+3 operand instructions:
+[u4 opcode][payload]
+0x1 add: [u4 dest][u4 ar1][u4 ar2] - addition
+0x2 sub: [u4 dest][u4 ar1][u4 ar2] - substraction
+0x3 and: [u4 dest][u4 ar1][u4 ar2] - bitwise and
+0x4 mul: [u4 dest][u4 ar1][u4 ar2] - multiplication
+0x5 div: [u4 dest][u4 ar1][u4 ar2] - division
+0x6 slt: [u4 dest][u4 ar1][u4 ar2] - set if less than
 
-SUBstract
-0x2 sub(reg arg1, reg arg2, reg dest):
-    dest = arg1 - arg2
+2 operand instructions:
+[u4 0x7][payload][u4 subop]
+0x1 or:  [u4 dest][u4 arg1] - bitwise or
+0x2 xor: [u4 dest][u4 arg1] - bitwise execlusive or
+0x3 not: [u4 dest][u4 arg1] - bitwise not
+0x6 loa: [u4 dest][u4 addr] 
+- load from mem addr in reg "addr" u16 into reg "dest"
+0x7 sto: [u4 src] [u4 addr]
+- store from reg "src" u16 into mem addr in reg "addr"
+(note for jpz, jnz, [u4 cond] is a register containing an i16 offset)
+0x8 jpz: [u4 offs][u4 cond] 
+- jump for u16 in reg "offs" if reg "cond" == 0
+0x9 jnz: [u4 offs][u4 cond]
+- jump for u16 in reg "offs" if reg "cond" != 0
+0xA lsr: [u4 dest][u4 offs]
+- logical shift right reg "dest" in-place by immediate offs
+0xB lsl: [u4 dest][u4 offs]
+- logical shift left reg "dest" in-place by immediate offs
+0xC asr: [u4 dest][u4 offs]
+- arithmetic shift right reg "dest" in-place by immediate offs
+0xD asl: [u4 dest][u4 offs]
+- arithmetic shift left reg "dest" in-place by immediate offs
 
-AND
-0x3 and(reg arg1, reg arg2, reg dest):
-    dest = arg1 & arg2
+1 operand instructions:
+[u4 0x8][payload][u4 unused][u4 subop]
+0x1 jto: [u4 reg] - jump to memory address in reg "reg"
+0x2 psh: [u4 reg] - push u16 from reg "reg" into stack
+0x3 pop: [u4 reg] - pop u16 to reg "reg" from stack
+0x4 cll: [u4 reg] - set lr to current pc, then jump to memory address in reg "reg"
 
-Set on Less Than
-0x4 slt(reg arg1, reg arg2, reg dest):
-    dest = (arg1 < arg2) ? 1 : 0
+immediate instructions: 
+[u4 opcode][payload]
+0x9 ldl: [u4 dest][u8 imm8] - load 
+0xA ldu: [u4 dest][u8 imm8]
+0xB sli: [u4 dest][u8 imm8]
 
-
-- 2-arg class (primary opcode 0x5, sub-opcodes 0x1 - 0x6)
-OR
-0x1 or(reg arg, reg dest):
-    dest = dest | arg
-
-eXclusive OR
-0x2 xor(reg arg, reg dest):
-    dest = dest ^ arg
-
-NOT
-0x3 not(reg arg, reg dest):
-    dest = ~arg
-
-CoMPare
-0x4 cmp(reg arg1, reg arg2):
-    flags updated by (arg1 - arg2)
-
-SHift Left
-0x5 shl(reg arg, reg dest):
-    dest = dest << arg
-
-SHift Right
-0x6 shr(reg arg, reg dest):
-    dest = dest >> arg
-
-
-- branch class (primary opcode 0x6, condition sub-opcodes 0x1 - 0x7)
-JumP
-0x1 jp(imm8 offset):
-    pc = pc + offset
-
-Jump if Zero
-0x2 jz(imm8 offset):
-    if (Z == 1) pc = pc + offset
-
-Jump if Not Zero
-0x3 jnz(imm8 offset):
-    if (Z == 0) pc = pc + offset
-
-Jump if Negative
-0x4 jn(imm8 offset):
-    if (N == 1) pc = pc + offset
-
-Jump if Not Negative
-0x5 jnn(imm8 offset):
-    if (N == 0) pc = pc + offset
-
-Jump if Carry
-0x6 jc(imm8 offset):
-    if (C == 1) pc = pc + offset
-
-Jump if Not Carry
-0x7 jnc(imm8 offset):
-    if (C == 0) pc = pc + offset
+control instructions:
+[u4 0xC][u8 unused][u4 subop]
+0x0 hlt - flip running bit off
+0x1 sys - flip priveldge bit, save pc to xpc and jump to kernel syscall vector
+0x2 xrt - exclusive return to pc saved in xpc and flip priveldge bit
+0x3 trp -
+0x4 nnt - flip interrupt bit off, disallowing interrupts
+0x5 int - flip interrupt bit on, allowing interrupts
+0x6 dbd - dump all registers
+0x7 pgf - throw pagefault interrupt
+0x8 brk - throw breakpoint interrupt
 
 
-- 1-arg class (primary opcode 0x7, sub-opcodes 0x8 - 0xB)
-Absolute Jump
-0x8 aj(reg arg):
-    pc = arg
+other instruction: (mother fucking assholes needed to separate em from everything else)
+0xD jmp: [u4 opcode][i12 simm12]
 
-CaLL
-0x9 cll(reg arg):
-    lr = pc; pc = arg
-
-PuSH
-0xA psh(reg arg):
-    mem[--sp] = arg
-
-POP
-0xB pop(reg dest):
-    dest = mem[sp++]
-
-
-- immediate class (primary opcodes 0x8 - 0x9)
-LoaD Lower
-0x8 ldl(reg dest, imm8):
-    dest = imm8
-
-LoaD Upper
-0x9 ldu(reg dest, imm8):
-    dest = (dest & 0x00FF) | (imm8 << 8)
-
-
-- mem class (primary opcodes 0xA - 0xB)
-LoaD
-0xA ld(reg dest, reg addr):
-    dest = mem[addr]
-
-STore
-0xB st(reg src, reg addr):
-    mem[addr] = src
-
-...
-
-- control class (primary opcode 0xF, sub-opcodes 0x0-0x2):
-HaLT
-0x0 hlt():
-	s->running = 0
-
-TRaP
-0x1 trp():
-
-eXception ReTurn
-0x2 xrt():
-
-- special
-0x0 nop():
-	// literally nothing
+unused:
+0xE
+0xF
 
 -- registers:
+system registers:
+0x0: zero
+0x1: sys
+0x2: gb
+0x3: sp
+0x4: pc
+0x5: xpc
 
-index 	- name	- purpose
-0 	- zr 	- always reads zero
-1 	- sy 	- return/syscall number
-2 	- a0 	- argument 1
-3 	- a1 	- argument 2
-4 	- a2 	- argument 3
-5 	- t0 	- temp
-6 	- t1 	- temp
-7 	- t2 	- temp
-8 	- s0 	- saved variable
-9 	- s1 	- saved variable
-10	- s2 	- saved variable
-11	- s3 	- saved variable
-12	- s4 	- saved variable
-13	- gp	- global ram pointer
-14	- sp	- stack pointer
-15	- pc	- program counter
+other registers:
+0x6: lr
+0x7: a0
+0x8: a1
+0x9: a2
+0xA: t0
+0xB: t1
+0xC: t2
+0xD: s0
+0XE: s1
+0XF: s2
+
+-- vectors:
+// TODO
