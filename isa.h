@@ -14,8 +14,8 @@ enum reg {
 	REG_S1,
 	REG_S2,
 	REG_S3,
+	REG_S4,
 	REG_GP,
-	REG_LR,
 	REG_SP,
 	REG_PC
 };
@@ -30,9 +30,8 @@ enum opcode {
         SUBOP_OR = 0x1,
         SUBOP_XOR = 0x2,
         SUBOP_NOT = 0x3,
-        SUBOP_CMP = 0x4,
-        SUBOP_SHL = 0x5,
-        SUBOP_SHR = 0x6,
+        SUBOP_SHL = 0x4,
+        SUBOP_SHR = 0x5,
 
         OP_BRNCH = 0x6,
         SUBOP_JP = 0x1,
