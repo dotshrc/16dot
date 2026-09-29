@@ -4,7 +4,7 @@ LDFLAGS:= -fsanitize=address,undefined
 XXD:=xxd
 XXDFLAGS:= -r -p
 
-SRC=emu.c cpu.c
+SRC=emu.c cpu.c instr.c
 OBJ=$(SRC:.c=.o)
 BIN=emu
 DOTHEX=ex.hex
