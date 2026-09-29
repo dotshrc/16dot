@@ -51,7 +51,7 @@ enum opcode {
 	OP_LDL		= 0x8,
 	OP_LDU		= 0x9,
 
-	OP_CTRL		= 0x0,
+	OP_CTR		= 0xA,
 	SUBOP_HLT	= 0x0,
 	SUBOP_SYS	= 0x1,
 	SUBOP_XRT	= 0x2,
