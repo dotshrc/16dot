@@ -19,10 +19,12 @@ i32 main(i32 argc, char **argv) {
 		return 1;
 	}
 	while (cpu.running) {
-		cpu_step(&cpu);
+		if (cpu_step(&cpu) == 1) {
+			log_err("cpu step failed");
+			cpu_shutdown(&cpu);
+			return 1;
+		}
 	}
 	cpu_shutdown(&cpu);
 	return 0;
 }
-
-
