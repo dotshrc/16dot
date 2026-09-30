@@ -13,7 +13,7 @@ no operation:
 
 2 operand instructions:
 [u4 0x6][payload][u4 subop]
-0x1 or:  [u4 dest][u4 argu] - bitwise or
+0x1 or : [u4 dest][u4 argu] - bitwise or
 0x2 xor: [u4 dest][u4 argu] - bitwise execlusive or
 0x3 not: [u4 dest] [u4 src] - bitwise not
 0x4 and: [u4 dest][u4 argu] - bitwise and
