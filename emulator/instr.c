@@ -10,42 +10,42 @@ typedef i8(*ctr_handler)(struct cpu *);
 
 i8 instr_nop(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(nop)\n");
 	return 0;
 }
 
 i8 instr_add(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(add)\n");
 	return 0;
 }
 
 i8 instr_sub(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(sub)\n");
 	return 0;
 }
 
 i8 instr_mul(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(mul)\n");
 	return 0;
 }
 
 i8 instr_div(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(div)\n");
 	return 0;
 }
 
 i8 instr_slt(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(slt)\n");
 	return 0;
 }
@@ -64,7 +64,7 @@ i8 instr_asr(struct cpu *cpu, u8 nib1, u8 nib2);
 i8 instr_asl(struct cpu *cpu, u8 nib1, u8 nib2);
 i8 instr_2op(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(2op)\n");
 	return 0;
 }
@@ -75,21 +75,21 @@ i8 instr_pop(struct cpu *cpu, u8 nib1);
 i8 instr_cll(struct cpu *cpu, u8 nib1);
 i8 instr_1op(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(1op)\n");
 	return 0;
 }
 
 i8 instr_ldl(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(ldl)\n");
 	return 0;
 }
 
 i8 instr_ldu(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(ldu)\n");
 	return 0;
 }
@@ -106,14 +106,14 @@ i8 instr_ctr(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
 	cpu->running = 0; 	// for now, it pauses execution because
 				// i'm too lazy to write it all for halt
-	log_stamp();
+	
 	log_info("TODO(ctr)\n");
 	return 0;
 }
 
 i8 instr_jmp(struct cpu *cpu, u8 nib1, u8 nib2, u8 nib3)
 {
-	log_stamp();
+	
 	log_info("TODO(jmp)\n");
 	return 0;
 }
@@ -151,7 +151,7 @@ i8 instr_brk(struct cpu *cpu) { return 0; }
 i8 instr_load(instr_handler *tab)
 {
 	if (!tab) {
-		log_stamp();
+		
 		log_err("invalid pointer argument");
 		return 1;
 	}
@@ -174,7 +174,7 @@ i8 instr_load(instr_handler *tab)
 i8 op2_load(op2_handler *tab)
 {
 	if (!tab) {
-		log_stamp();
+		
 		log_err("invalid pointer argument");
 		return 1;
 	}
@@ -196,7 +196,7 @@ i8 op2_load(op2_handler *tab)
 i8 op1_load(op1_handler *tab)
 {
 	if (!tab) {
-		log_stamp();
+		
 		log_err("invalid pointer argument");
 		return 1;
 	}
@@ -210,7 +210,7 @@ i8 op1_load(op1_handler *tab)
 i8 ctr_load(ctr_handler *tab)
 {
 	if (!tab) {
-		log_stamp();
+		
 		log_err("invalid pointer argument");
 		return 1;
 	}
