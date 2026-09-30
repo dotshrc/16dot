@@ -16,6 +16,7 @@ i32 main(i32 argc, char **argv) {
 	struct cpu cpu = {0};
 	if (cpu_init(&cpu, argv[1]) == 1) {
 		log_err("failed to initialize cpu");
+		cpu_shutdown(&cpu);
 		return 1;
 	}
 	while (cpu.running) {
