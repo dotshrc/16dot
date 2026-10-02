@@ -41,10 +41,10 @@ i8 cpu_init(struct cpu *cpu, const char *pathtoexec)
 	if (!cpu) { log_err("invalid pointer argument"); return 1; }
 	cpu->reg = calloc(1, REG_MAXSIZE);
 	cpu->mem = calloc(1, MEM_MAXSIZE);
-	instr_handler *instr_table = 
-		calloc(1, 16*sizeof(instr_handler));
-	instr_load(instr_table);
-	cpu->instr_tab = instr_table;
+	struct instr_table *instr_tab = 
+		calloc(1, sizeof(struct instr_table));
+	instr_table_load(instr_tab);
+	cpu->instr_tab = instr_tab;
 	cpu->running = 1;
 	if (cpu_load(cpu, pathtoexec) == 1) {
 		log_err("failed to load executable");
@@ -62,6 +62,7 @@ i8 cpu_shutdown(struct cpu *cpu)
 	}
 	free(cpu->reg);
 	free(cpu->mem);
+	instr_table_unload(cpu->instr_tab);
 	free(cpu->instr_tab);
 
 	return 0;
@@ -74,77 +75,24 @@ i8 cpu_step(struct cpu *cpu) {
 	}
 	
 	u16 pc = cpu->reg[REG_PC];
-	u16 inst = ((u16)cpu->mem[pc] << 8) | cpu->mem[pc + 1];
+	u16 ir = ((u16)cpu->mem[pc] << 8) | cpu->mem[pc + 1];
 	cpu->reg[REG_PC] += 2;
-	u8 opcode = getnib(inst, 0);
-	u8 nib1 = getnib(inst, 1);
-	u8 nib2 = getnib(inst, 2);
-	u8 nib3 = getnib(inst, 3);
+	u8 opcode = getnib(ir, 0);
+	u8 nib1 = getnib(ir, 1);
+	u8 nib2 = getnib(ir, 2);
+	u8 nib3 = getnib(ir, 3);
+	cpu->ir = ir;
 
 	printf("pc -> %d\n", cpu->reg[REG_PC]);
 	if (opcode > 15) { 
-		log_err_args("invalid instruction "
+		log_err_args("invalid irruction "
 			"\"0x%04X\"", opcode);
 		return 1;
 	}
-	if (cpu->instr_tab[opcode](cpu, 
+	if (cpu->instr_tab->top_tab[opcode](cpu, 
 		nib1, nib2, nib3) == 1) {
-		log_err_args("failed to execute instruction "
+		log_err_args("failed to execute irruction "
 			"\"0x%04X\"", opcode);
-	}
-	//switch (opcode) {
-	//	case OP_NOP:
-	//		break;
-
-	//	case OP_ADD:
-	//		instr_add(cpu, inst); 
-	//		break;	
-
-	//	case OP_SUB:
-	//		instr_sub(cpu, inst); 
-	//		break;
-
-	//	case OP_MUL:
-	//		instr_mul(cpu, inst);
-	//		break;
-
-	//	case OP_DIV:
-	//		instr_div(cpu, inst);
-	//		break;
-
-	//	case OP_SLT:
-	//		instr_slt(cpu, inst);
-	//		break;	
-
-	//	case OP_2OP:
-	//		instr_2op(cpu, inst);
-	//		break;
-
-	//	case OP_1OP:
-	//		instr_1op(cpu, inst);
-	//		break;
-
-	//	case OP_LDL:
-	//		instr_ldl(cpu, inst);
-	//		break;
-
-	//	case OP_LDU:
-	//		instr_ldu(cpu, inst);
-	//		break;	
-
-	//	case OP_CTR:
-	//		instr_ctr(cpu, inst);
-	//		break;
-
-	//	case OP_JMP:
-	//		instr_jmp(cpu, inst);
-	//		break;
-
-	//	default:
-	//		log_err_args("unknown instruction (at pc %d) "
-	//			"\"0x%04X\"", cpu->reg[REG_PC], opcode);
-	//		return 1;
-	//		
-	//}
+	}	
 	return 0;
 }

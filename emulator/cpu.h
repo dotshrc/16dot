@@ -7,7 +7,8 @@ struct cpu {
 	u8 *mem;
 	u8 priv;
 	u8 running;
-	instr_handler *instr_tab;
+	u16 ir;
+	struct instr_table *instr_tab;
 };
 
 i8 cpu_init(struct cpu *cpu, const char *pathtoexec); 
