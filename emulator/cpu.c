@@ -29,7 +29,7 @@ i8 cpu_load(struct cpu *cpu, const char *path)
 	size_t words = fread(cpu->mem, sizeof(u16), 1 << 16, f);
 	if (!words) {
 		log_err("couldn't load file");
-		perror("fopen");
+		perror("fread");
 		return 1;
 	}
 	fclose(f);
