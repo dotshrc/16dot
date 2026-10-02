@@ -55,7 +55,7 @@ control instructions:
 0x3 trp - flip priveldge bit, save pc to xpc and jump to kernel trap vector
 0x4 nnt - flip interrupt bit off, disallowing interrupts
 0x5 int - flip interrupt bit on, allowing interrupts
-0x6 drg - dump all registers
+0x6 dbi - dump debug info
 0x7 brk - throw breakpoint interrupt
 
 

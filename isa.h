@@ -58,7 +58,7 @@ enum opcode {
 	SUBOP_TRP	= 0x3,
 	SUBOP_NNT	= 0x4,
 	SUBOP_INT	= 0x5,
-	SUBOP_DRG	= 0x6,
+	SUBOP_DBI	= 0x6,
 	SUBOP_BRK	= 0x7,
 
 	OP_JMP		= 0xB,
